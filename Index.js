@@ -21,6 +21,8 @@ client.on('interactionCreate', async interaction => {
         await interaction.reply('Test successful!');
     } else if (commandName === 'chmouss') {
         await interaction.reply('Chmouss stinks alot!');
+    } else if (commandName === 'twitch') {
+        await interaction.reply('https://www.twitch.tv/chmouss');
     }
 });
 
