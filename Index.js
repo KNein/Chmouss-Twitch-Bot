@@ -1,34 +1,24 @@
 const { Client, GatewayIntentBits } = require('discord.js');
+require('dotenv').config();
 
-require('dotenv').config(); const token = process.env.DISCORDBOTTOKEN;
-
-
-
-
-
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-
-
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildIntegrations] });
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-//respond to messages
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return;
 
-client.on('messageCreate', message => {
-    if (message.content === '!ping') {
-        console.log(`Message received from ${message.author.username}: ${message.content}`);
-        message.channel.send('Pong!');
-        
-    } else if (message.content.toLowerCase() === 'test') {
-        console.log(`Message received from ${message.author.username}: ${message.content}`);
-        message.channel.send('Test successful!');
+    const { commandName } = interaction;
 
-    } else if (message.content.toLowerCase() === 'chmouss') {
-        console.log(`Message received from ${message.author.username}: ${message.content}`);
-        message.channel.send('Chmouss stinks alot!');
-    }    
+    if (commandName === 'ping') {
+        await interaction.reply('Pong!');
+    } else if (commandName === 'test') {
+        await interaction.reply('Test successful!');
+    } else if (commandName === 'chmouss') {
+        await interaction.reply('Chmouss stinks alot!');
+    }
 });
 
 
@@ -37,27 +27,7 @@ client.on('messageCreate', message => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//const fetch = require('node-fetch'); 
-//twitchLiveMsg();
-
-
+client.login(process.env.DISCORDBOTTOKEN);
 
 const twitchLiveMsg = () => {
 const twitchClientId = 'your_twitch_client_id';
@@ -85,9 +55,3 @@ setInterval(async () => {
     }
 }, 60000);
 };
-
-
-
-
-
-client.login(token);
