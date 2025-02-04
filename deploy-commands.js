@@ -19,6 +19,11 @@ const commands = [
         description: 'Chmouss Twitch channel',
 
     },
+    {
+        name: 'rayz',
+        description: 'I think Rayz likes paws',
+  
+    },
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORDBOTTOKEN);
