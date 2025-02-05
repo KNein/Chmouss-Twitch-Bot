@@ -42,14 +42,14 @@ async function twitchLiveMsg() {
 
 
     setInterval(async () => {
-        console.log('Checking Twitch status...');
+        console.log(`Checking ${twitchUsername} Twitch status...`);
         const isLive = await checkTwitchLiveStatus(twitchUsername);
-        console.log('isLive:', isLive);
+        //console.log('isLive:', isLive);
         if (isLive && !liveNotificationSent) {
             console.log(`${twitchUsername} is now live on Twitch!`);
             const channel = client.channels.cache.find(channel => channel.name === 'awa'); // Change 'general' to the name of the channel you want to send the message to
             if (channel) {
-                //channel.send(`${twitchUsername} is now live on Twitch!`);
+                channel.send(`${twitchUsername} is now live on Twitch!`);
                 liveNotificationSent = true;
             }
         } else if (!isLive) {
@@ -57,7 +57,7 @@ async function twitchLiveMsg() {
             console.log(`${twitchUsername} is not live on Twitch.`);
         }
 
-    }, 6000);
+    }, 60000);
 }
 
 
@@ -73,7 +73,7 @@ async function checkTwitchLiveStatus(twitchUsername) {
         }
     });
     const data = await response.json();
-    console.log('data:', data.data);
+    //console.log('data:', data.data);
     return data.data.length > 0;
 }
 
