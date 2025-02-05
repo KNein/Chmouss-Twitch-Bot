@@ -1,10 +1,8 @@
 const { Client, GatewayIntentBits } = require('discord.js');
 require('dotenv').config();
 
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildIntegrations] });
 client.login(process.env.DISCORDBOTTOKEN);
-
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -34,34 +32,50 @@ client.on('interactionCreate', async interaction => {
 
 
 
-//twitchLiveMsg();
+twitchLiveMsg();
 
-function twitchLiveMsg () {
-    const twitchClientId = process.env.TWITCH_CLIENT_ID;
-    const twitchAccessToken = process.env.TWITCH_ACCESS_TOKEN;
-    const twitchUsername = process.env.TWITCHUSERNAME;
 
-    async function checkTwitchLiveStatus() {
-        const response = await fetch(`https://api.twitch.tv/helix/streams?user_login=${twitchUsername}`, {
-            headers: {
-                'Client-ID': twitchClientId,
-                'Authorization': `Bearer ${twitchAccessToken}`
-            }
-        });
-        const data = await response.json();
-        return data.data.length > 0;
-    }
+async function twitchLiveMsg() {
+
+    const twitchUsername = process.env.TWITCH_USERNAME;
+    let liveNotificationSent = false;
+
 
     setInterval(async () => {
-        const isLive = await checkTwitchLiveStatus();
-        if (isLive) {
-            const channel = client.channels.cache.find(channel => channel.name === 'general'); // Change 'general' to the name of the channel you want to send the message to
+        console.log('Checking Twitch status...');
+        const isLive = await checkTwitchLiveStatus(twitchUsername);
+        console.log('isLive:', isLive);
+        if (isLive && !liveNotificationSent) {
+            console.log(`${twitchUsername} is now live on Twitch!`);
+            const channel = client.channels.cache.find(channel => channel.name === 'awa'); // Change 'general' to the name of the channel you want to send the message to
             if (channel) {
-                channel.send(`${twitchUsername} is now live on Twitch!`);
+                //channel.send(`${twitchUsername} is now live on Twitch!`);
+                liveNotificationSent = true;
             }
+        } else if (!isLive) {
+            liveNotificationSent = false;
+            console.log(`${twitchUsername} is not live on Twitch.`);
         }
-    }, 60000);
-};
+
+    }, 6000);
+}
+
+
+
+async function checkTwitchLiveStatus(twitchUsername) {
+    const twitchClientId = process.env.TWITCH_CLIENT_ID;
+    const twitchAccessToken = process.env.TWITCH_ACCESS_TOKEN;
+
+    const response = await fetch(`https://api.twitch.tv/helix/streams?user_login=${twitchUsername}`, {
+        headers: {
+            'Client-ID': twitchClientId,
+            'Authorization': `Bearer ${twitchAccessToken}`
+        }
+    });
+    const data = await response.json();
+    console.log('data:', data.data);
+    return data.data.length > 0;
+}
 
 
 
