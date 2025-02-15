@@ -29,8 +29,10 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+
+
    //Points system for fun and testing. Maybe some games in the future? 
- const userPoints = new Map(); //how to save points to a file? Also add a deploy command to see the points of a user.
+ const userPoints = new Map(); //how to save points to a file so it dosnt get reset on bot down time? Also add a deploy command to see the points of a user and other fun stuff.
 
 client.on('messageCreate', message => {
     if (message.author.bot) return;
