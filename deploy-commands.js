@@ -12,7 +12,7 @@ const commands = [
     },
     {
         name: 'chmouss',
-        description: 'Replies with Chmouss stinks alot!',
+        description: 'Chmouss stinks alot!',
     },
     {
         name: 'twitch',

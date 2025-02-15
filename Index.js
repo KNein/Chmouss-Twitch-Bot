@@ -29,6 +29,24 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+   //Points system for fun and testing. Maybe some games in the future? 
+ const userPoints = new Map(); //how to save points to a file? Also add a deploy command to see the points of a user.
+
+client.on('messageCreate', message => {
+    if (message.author.bot) return;
+
+    const userId = message.author.id;
+    if (!userPoints.has(userId)) {
+        userPoints.set(userId, 0);
+    }
+
+    userPoints.set(userId, userPoints.get(userId) + 1);
+    console.log(`User ${message.author.tag} has ${userPoints.get(userId)} points.`);
+});
+
+
+
+
 
 
 
@@ -44,10 +62,10 @@ async function twitchLiveMsg() {
     setInterval(async () => {
         console.log(`Checking ${twitchUsername} Twitch status...`);
         const isLive = await checkTwitchLiveStatus(twitchUsername);
-        //console.log('isLive:', isLive);
+        //console.log('isLive:', isLive); 
         if (isLive && !liveNotificationSent) {
             console.log(`${twitchUsername} is now live on Twitch!`);
-            const channel = client.channels.cache.find(channel => channel.name === 'awa'); // Change 'general' to the name of the channel you want to send the message to
+            const channel = client.channels.cache.find(channel => channel.name === 'awa'); // Change 'awa' to the name of the channel you want to send the message to
             if (channel) {
                 channel.send(`${twitchUsername} is now live on Twitch!`);
                 liveNotificationSent = true;
@@ -57,7 +75,7 @@ async function twitchLiveMsg() {
             console.log(`${twitchUsername} is not live on Twitch.`);
         }
 
-    }, 60000);
+    }, 60000); // how often to check Twitch status in milliseconds (60000ms = 1 minute)
 }
 
 
